@@ -35,6 +35,9 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
                     case IRequireHtlmEncoding encodeObject:
                         InspectAndEncodeObjectSringProperties(encodeObject, ignoreFields);
                         break;
+                    case IDictionary<string, string> dict:
+                        InspectAndEncodeObjectSringProperties(dict, ignoreFields);
+                        break;
                 }
             }
 
@@ -80,7 +83,7 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
             if (hasIgnoreAttribute)
                 return false;
 
-            return value is IRequireHtlmEncoding;
+            return value is IRequireHtlmEncoding || value is IDictionary<string,string>;
         }
 
         private static void InspectAndEncodeObjectSringProperties(IRequireHtlmEncoding objectToEncodeStringProperties, HashSet<string> ignoreFields, string path = "")
@@ -119,7 +122,7 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
                         switch (propertyValue)
                         {
                             case IRequireHtlmEncoding encodeInnerObject:
-                                
+
                                 InspectAndEncodeObjectSringProperties(encodeInnerObject, ignoreFields, innerPath);
                                 break;
                         }
@@ -129,6 +132,19 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
             }
         }
 
+
+        private static void InspectAndEncodeObjectSringProperties(IDictionary<string, string> dict, HashSet<string> ignoreFields)
+        {
+            var keys = dict.Keys.ToList();
+            foreach (var fieldKey in keys)
+            {
+                if (ignoreFields.Contains(fieldKey) || string.IsNullOrEmpty(dict[fieldKey]))
+                    continue;
+
+                dict[fieldKey] = HtmlEnconde(dict[fieldKey])!;
+
+            }
+        }
         private static string? HtmlEnconde(string? original)
         {
             return original is null ? null : WebUtility.HtmlEncode(original);

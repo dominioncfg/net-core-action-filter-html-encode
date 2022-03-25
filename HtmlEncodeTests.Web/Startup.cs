@@ -24,10 +24,10 @@ namespace HtmlEncodeTests.Web
             services.AddSingleton(new List<TypedModel>());
             services.AddSingleton(new List<Dictionary<string, string>>());
             services.AddTransient<IEncodedContentContainer, EncodedContentContainer>();
-            services.AddControllers(options=>
+            services.AddControllers(options =>
             {
                 options.Filters.Add(new HtmlEncodeActionFilterAttribute());
-            });
+            }).AddNewtonsoftJson(); 
           
 
         }

@@ -38,7 +38,7 @@ namespace HtmlEncodeTests.Web
 
 
         [HttpPost("dict")]
-
+        [IgnoreEncodeAsHtml("ignoreStringField", "InnerModel.IgnorePathProperty")]
         public void Dict([FromBody] Dictionary<string, string> model, CancellationToken _)
         {
             _encodedContent.AddDict(model);
