@@ -236,42 +236,6 @@ namespace HtmlEncodeTests.IntegrationTests
             firstModel.NeverEncodeField.Should().Be(anotherString);
         }
 
-        [Fact]
-        [ResetApplicationState]
-        public async Task DoesNotEncodePropertiesMarkedOnActionAttributeToBeIgnored()
-        {
-            string originalString = "<string>Hola Mundo</string>";
-            string encodedString = "&lt;string&gt;Hola Mundo&lt;/string&gt;";
-
-            var request = new TypedModelBuilder()
-                .WithInt(4)
-                .WithString(originalString)
-                .WithIgnorePathProperty(originalString)
-                .WithInnerModel(innerModel => innerModel
-                    .WithInt(5)
-                    .WithString("simpleString")
-                    .WithIgnorePathProperty(originalString)
-                )
-                .Build();
-
-            await Given.PostAndExpectOkAsync(ApiHelper.Post.PostModelUrl(), request);
-
-            var modelsInDb = Given.GetEncodedModels();
-
-            modelsInDb.Should().NotBeNull().And.HaveCount(1);
-
-            var firstModel = modelsInDb[0];
-            firstModel.Should().NotBeNull();
-            firstModel.IntField.Should().Be(request.IntField);
-            firstModel.StringField.Should().Be(encodedString);
-            firstModel.IgnorePathProperty.Should().Be(request.IgnorePathProperty);
-
-            firstModel.InnerModel.Should().NotBeNull();
-            firstModel.InnerModel.InnerIntField.Should().Be(request.InnerModel.InnerIntField);
-            firstModel.InnerModel.InnerStringField.Should().Be(request.InnerModel.InnerStringField);
-            firstModel.InnerModel.IgnorePathProperty.Should().Be(request.InnerModel.IgnorePathProperty);
-        }
-
         public static class ApiHelper
         {
             public static class Post

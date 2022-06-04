@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -25,18 +24,13 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
             if (!inspectArguments.Any())
                 return;
 
-            var ignoreFields = LoadIgnoreFields(context);
-
             foreach (var argument in inspectArguments)
             {
                 var value = argument.Value;
                 switch (value)
                 {
                     case IRequireHtlmEncoding encodeObject:
-                        InspectAndEncodeObjectSringProperties(encodeObject, ignoreFields);
-                        break;
-                    case IDictionary<string, string> dict:
-                        InspectAndEncodeObjectSringProperties(dict, ignoreFields);
+                        InspectAndEncodeObjectSringProperties(encodeObject);
                         break;
                 }
             }
@@ -49,23 +43,6 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
                 .ActionDescriptor
                 .EndpointMetadata
                 .Any(x => x is NeverEncodeAsHtmlAttribute);
-        }
-
-        private static HashSet<string> LoadIgnoreFields(ActionExecutingContext context)
-        {
-            var attr = context
-                .ActionDescriptor
-                .EndpointMetadata
-                .OfType<IgnoreEncodeAsHtmlAttribute>()
-                .FirstOrDefault();
-
-            if (attr is null || attr.Fields is null)
-                return new HashSet<string>();
-
-            return attr
-                .Fields
-                .Where(x => (!string.IsNullOrWhiteSpace(x)))
-                .ToHashSet();
         }
 
         private static bool HttpMethodApplies(HttpRequest request)
@@ -83,10 +60,10 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
             if (hasIgnoreAttribute)
                 return false;
 
-            return value is IRequireHtlmEncoding || value is IDictionary<string,string>;
+            return value is IRequireHtlmEncoding || value is IDictionary<string, string>;
         }
 
-        private static void InspectAndEncodeObjectSringProperties(IRequireHtlmEncoding objectToEncodeStringProperties, HashSet<string> ignoreFields, string path = "")
+        private static void InspectAndEncodeObjectSringProperties(IRequireHtlmEncoding objectToEncodeStringProperties)
         {
             if (objectToEncodeStringProperties == null)
                 return;
@@ -100,10 +77,6 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
             foreach (var property in propertiesToInspect)
             {
                 string propertyName = property.Name;
-                string innerPath = string.IsNullOrEmpty(path) ? propertyName : $"{path}.{propertyName}";
-                if (ignoreFields.Contains(innerPath))
-                    continue;
-
 
                 if (property.PropertyType == typeof(string))
                 {
@@ -123,7 +96,7 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
                         {
                             case IRequireHtlmEncoding encodeInnerObject:
 
-                                InspectAndEncodeObjectSringProperties(encodeInnerObject, ignoreFields, innerPath);
+                                InspectAndEncodeObjectSringProperties(encodeInnerObject);
                                 break;
                         }
                     }
@@ -132,19 +105,6 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
             }
         }
 
-
-        private static void InspectAndEncodeObjectSringProperties(IDictionary<string, string> dict, HashSet<string> ignoreFields)
-        {
-            var keys = dict.Keys.ToList();
-            foreach (var fieldKey in keys)
-            {
-                if (ignoreFields.Contains(fieldKey) || string.IsNullOrEmpty(dict[fieldKey]))
-                    continue;
-
-                dict[fieldKey] = HtmlEnconde(dict[fieldKey])!;
-
-            }
-        }
         private static string? HtmlEnconde(string? original)
         {
             return original is null ? null : WebUtility.HtmlEncode(original);

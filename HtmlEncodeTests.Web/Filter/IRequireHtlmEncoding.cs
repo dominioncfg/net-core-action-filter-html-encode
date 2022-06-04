@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace HtmlEncodeTests.IntegrationTests.Encode
 {
@@ -7,17 +6,5 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
 
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public class NeverEncodeAsHtmlAttribute : Attribute { }
-
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class IgnoreEncodeAsHtmlAttribute : Attribute {
-
-        public string[] Fields { get; set; } = Array.Empty<string>();
-
-        public IgnoreEncodeAsHtmlAttribute(params string[] fields)
-        {
-            Fields = fields;
-        }
-    }
-
+    public class NeverEncodeAsHtmlAttribute : Attribute { }   
 }

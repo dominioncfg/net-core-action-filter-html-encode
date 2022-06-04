@@ -1,6 +1,5 @@
 ﻿using HtmlEncodeTests.IntegrationTests.Encode;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace HtmlEncodeTests.Web
@@ -17,7 +16,6 @@ namespace HtmlEncodeTests.Web
         }
 
         [HttpPost("model")]
-        [IgnoreEncodeAsHtml("IgnorePathProperty", "InnerModel.IgnorePathProperty")]
         public void PostModel([FromBody] TypedModel model, CancellationToken _)
         {
             _encodedContent.AddModel(model);
@@ -34,14 +32,6 @@ namespace HtmlEncodeTests.Web
         public void PostModelIgnoreModel([FromBody] IgnoreTypedModel model, CancellationToken _)
         {
             _encodedContent.AddModel(model);
-        }
-
-
-        [HttpPost("dict")]
-        [IgnoreEncodeAsHtml("ignoreStringField", "InnerModel.IgnorePathProperty")]
-        public void Dict([FromBody] Dictionary<string, string> model, CancellationToken _)
-        {
-            _encodedContent.AddDict(model);
         }
     }
 }

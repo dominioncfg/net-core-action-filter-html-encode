@@ -22,13 +22,12 @@ namespace HtmlEncodeTests.Web
                 c.CustomSchemaIds(t => t.Name);
             });
             services.AddSingleton(new List<TypedModel>());
-            services.AddSingleton(new List<Dictionary<string, string>>());
             services.AddTransient<IEncodedContentContainer, EncodedContentContainer>();
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HtmlEncodeActionFilterAttribute());
-            }).AddNewtonsoftJson(); 
-          
+            }).AddNewtonsoftJson();
+
 
         }
 
@@ -43,6 +42,6 @@ namespace HtmlEncodeTests.Web
             app.UseEndpoints(endpoints =>
                 endpoints.MapDefaultControllerRoute()
                 );
-        }      
+        }
     }
 }

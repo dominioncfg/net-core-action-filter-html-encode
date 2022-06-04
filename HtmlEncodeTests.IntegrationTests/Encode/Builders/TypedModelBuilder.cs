@@ -8,7 +8,6 @@ namespace HtmlEncodeTests.IntegrationTests
         private int intField;
         private string stringField;
         private string neverEncodeField;
-        private string ignorePathProperty;
         private InnerTypedModel innerModelField;
 
         public TypedModelBuilder WithInt(int value)
@@ -29,12 +28,6 @@ namespace HtmlEncodeTests.IntegrationTests
             return this;
         }
 
-        public TypedModelBuilder WithIgnorePathProperty(string value)
-        {
-            ignorePathProperty = value;
-            return this;
-        }
-
         public TypedModelBuilder WithInnerModel(Action<InnerTypedModelBuilder> config)
         {
             var builder = new InnerTypedModelBuilder();
@@ -48,7 +41,6 @@ namespace HtmlEncodeTests.IntegrationTests
             IntField = intField,
             StringField = stringField,
             NeverEncodeField = neverEncodeField,
-            IgnorePathProperty = ignorePathProperty,
             InnerModel = innerModelField,
         };
     }
@@ -57,7 +49,6 @@ namespace HtmlEncodeTests.IntegrationTests
     {
         private int intField;
         private string stringField;
-        private string ignorePathProperty;
 
         public InnerTypedModelBuilder WithInt(int value)
         {
@@ -71,17 +62,10 @@ namespace HtmlEncodeTests.IntegrationTests
             return this;
         }
 
-        public InnerTypedModelBuilder WithIgnorePathProperty(string value)
-        {
-            ignorePathProperty = value;
-            return this;
-        }
-
         public InnerTypedModel Build() => new()
         {
             InnerIntField = intField,
             InnerStringField = stringField,
-            IgnorePathProperty = ignorePathProperty,
         };
     }
 

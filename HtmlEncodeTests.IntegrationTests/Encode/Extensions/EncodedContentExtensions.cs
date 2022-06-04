@@ -12,11 +12,5 @@ namespace HtmlEncodeTests.IntegrationTests
             var contentContainer = given.Server.Services.GetRequiredService<IEncodedContentContainer>();
             return contentContainer.GetAllModels().ToList();
         }
-
-        public static List<Dictionary<string,string>> GetEncodedDicts(this TestServerFixture given)
-        {
-            var contentContainer = given.Server.Services.GetRequiredService<IEncodedContentContainer>();
-            return contentContainer.GetAllDicts().ToList();
-        }
     }
 }

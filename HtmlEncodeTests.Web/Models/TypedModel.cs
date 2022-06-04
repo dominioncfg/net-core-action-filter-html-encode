@@ -12,8 +12,6 @@ namespace HtmlEncodeTests.Web
         public string? StringField { get; set; } = string.Empty;
         public int IntField { get; set; }
 
-        public string? IgnorePathProperty { get; set; } = string.Empty;
-
         [NeverEncodeAsHtml]
         public string? NeverEncodeField { get; set; } = string.Empty;
 
@@ -24,7 +22,6 @@ namespace HtmlEncodeTests.Web
     {
         public string InnerStringField { get; set; } = string.Empty;
         public int InnerIntField { get; set; }
-        public string? IgnorePathProperty { get; set; } = string.Empty;
     }
 
     [NeverEncodeAsHtml]

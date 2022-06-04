@@ -10,9 +10,6 @@ namespace HtmlEncodeTests.IntegrationTests
         {
             var models = given.Server.Services.GetRequiredService<List<TypedModel>>();
             models.Clear();
-
-            var dicts = given.Server.Services.GetRequiredService<List<Dictionary<string, string>>>();
-            dicts.Clear();
         }
     }
 }
