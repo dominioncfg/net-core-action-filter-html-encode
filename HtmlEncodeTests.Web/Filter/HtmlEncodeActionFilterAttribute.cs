@@ -48,7 +48,7 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
         private static bool HttpMethodApplies(HttpRequest request)
         {
             var method = request.Method;
-            return method == "GET" || method == "POST" || method == "PUT";
+            return method == "POST" || method == "PUT";
         }
 
         private static bool ShouldInspectObject(object? value)
@@ -60,7 +60,7 @@ namespace HtmlEncodeTests.IntegrationTests.Encode
             if (hasIgnoreAttribute)
                 return false;
 
-            return value is IRequireHtlmEncoding || value is IDictionary<string, string>;
+            return value is IRequireHtlmEncoding;
         }
 
         private static void InspectAndEncodeObjectSringProperties(IRequireHtlmEncoding objectToEncodeStringProperties)
